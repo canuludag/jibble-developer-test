@@ -1,5 +1,8 @@
 package com.uludag.can.jibbledevelopertest.ui.home;
 
+import android.content.Context;
+
+import com.uludag.can.jibbledevelopertest.R;
 import com.uludag.can.jibbledevelopertest.models.Album;
 import com.uludag.can.jibbledevelopertest.models.CombinedData;
 import com.uludag.can.jibbledevelopertest.models.Post;
@@ -11,15 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 
 public class HomePresenter implements HomeActivityContract.Presenter {
 
+    private Context mContext;
     private HomeActivityContract.View mView;
     private HomeActivityContract.Model mModel;
 
-    public HomePresenter(HomeActivityContract.Model model) {
+    @Inject
+    public HomePresenter(HomeActivityContract.Model model, Context context) {
         mModel = model;
+        mContext = context;
     }
 
     @Override
@@ -62,7 +70,12 @@ public class HomePresenter implements HomeActivityContract.Presenter {
         }).doOnComplete(() -> {
             mView.populateAdapter(dataList);
             mView.hideProgressbar();
-        }).subscribe();
+        }).doOnError(throwable -> {
+            mView.hideProgressbar();
+            mView.displaySnackBar(mContext.getString(R.string.snackbar_error_fetching_data));
+            throwable.printStackTrace();
+        })
+                .subscribe();
     }
 
 }

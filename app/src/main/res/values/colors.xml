@@ -7,4 +7,5 @@
     <color name="colorText">#424242</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorSwipeBgRed">#d50000</color>
+    <color name="colorBottomSheetBg">#d9d8d8</color>
 </resources>

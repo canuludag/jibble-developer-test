@@ -24,6 +24,7 @@ interface HomeActivityContract {
 
         fun populateAdapter(dataList: MutableList<CombinedData>)
 
+        fun displaySnackBar(message: String)
     }
 
     interface Presenter {

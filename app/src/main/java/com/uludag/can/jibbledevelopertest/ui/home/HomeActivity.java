@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +37,8 @@ public class HomeActivity extends AppCompatActivity
         implements HomeActivityContract.View, RecyclerItemTouchHelperListener, EditPostTitleListener {
 
     // View injections
+    @BindView(R.id.coordinatorContainer)
+    CoordinatorLayout mCoordinatorContainer;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
     // For the BottomSheet
@@ -125,6 +129,11 @@ public class HomeActivity extends AppCompatActivity
         } else {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
+    }
+
+    @Override
+    public void displaySnackBar(@NotNull String message) {
+        Snackbar.make(mCoordinatorContainer, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

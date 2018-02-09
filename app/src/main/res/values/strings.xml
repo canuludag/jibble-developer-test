@@ -3,4 +3,5 @@
     <string name="app_name_debug">Debug-Jibble Developer Test</string>
     <string name="hint_edit_post_title">Edit post title</string>
     <string name="btn_save">SAVE</string>
+    <string name="snackbar_error_fetching_data">An error occurred while loading the data :(</string>
 </resources>
