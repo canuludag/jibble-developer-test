@@ -18,25 +18,25 @@ interface HomeActivityContract {
 
         fun refreshRecyclerView()
 
-        fun setupBottomSheet();
+        fun setupBottomSheet()
 
         fun toggleBottomSheet(state: Boolean)
+
+        fun populateAdapter(dataList: MutableList<CombinedData>)
 
     }
 
     interface Presenter {
         fun setView(view: HomeActivityContract.View)
 
-        fun createCombinedData(): Observable<List<CombinedData>>
-
-        fun getAllData(): List<CombinedData>
+        fun fetchCombinedData()
     }
 
     interface Model {
-        fun fetchPosts(): Observable<List<Post>>
+        fun getPosts(): Observable<List<Post>>
 
-        fun fetchAlbums(): Observable<List<Album>>
+        fun getAlbums(): Observable<List<Album>>
 
-        fun fetchUsers(): Observable<List<User>>
+        fun getUsers(): Observable<List<User>>
     }
 }

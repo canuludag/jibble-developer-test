@@ -12,6 +12,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class Repository  implements HomeActivityContract.Model{
 
@@ -24,19 +26,25 @@ public class Repository  implements HomeActivityContract.Model{
 
     @NotNull
     @Override
-    public Observable<List<Post>> fetchPosts() {
-        return null;
+    public Observable<List<Post>> getPosts() {
+        return mApiService.getPosts()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @NotNull
     @Override
-    public Observable<List<Album>> fetchAlbums() {
-        return null;
+    public Observable<List<Album>> getAlbums() {
+        return mApiService.getAlbums()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @NotNull
     @Override
-    public Observable<List<User>> fetchUsers() {
-        return null;
+    public Observable<List<User>> getUsers() {
+        return mApiService.getUsers()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

@@ -2,6 +2,7 @@ package com.uludag.can.jibbledevelopertest.ui.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.widget.ProgressBar;
 
 import com.uludag.can.jibbledevelopertest.R;
 import com.uludag.can.jibbledevelopertest.base.App;
+import com.uludag.can.jibbledevelopertest.listeners.EditPostTitleListener;
 import com.uludag.can.jibbledevelopertest.listeners.RecyclerItemTouchHelperListener;
 import com.uludag.can.jibbledevelopertest.models.CombinedData;
 import com.uludag.can.jibbledevelopertest.utils.RecyclerViewTouchHelper;
@@ -30,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity
-        implements HomeActivityContract.View, RecyclerItemTouchHelperListener {
+        implements HomeActivityContract.View, RecyclerItemTouchHelperListener, EditPostTitleListener {
 
     // View injections
     @BindView(R.id.recyclerview)
@@ -51,7 +53,7 @@ public class HomeActivity extends AppCompatActivity
     @Inject
     HomeActivityContract.Presenter mPresenter;
 
-    private List<CombinedData> dataList;
+    private List<CombinedData> mDataList;
     private RecyclerViewAdapter mAdapter;
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -68,7 +70,6 @@ public class HomeActivity extends AppCompatActivity
         setupBottomSheet();
         setupRecyclerView();
 
-
     }
 
     @Override
@@ -79,7 +80,6 @@ public class HomeActivity extends AppCompatActivity
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerViewTouchHelper(0,
                 ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
-
     }
 
     @Override
@@ -88,8 +88,15 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void loadData() {
+    public void populateAdapter(@NonNull List<CombinedData> combinedDataList) {
+        mDataList = combinedDataList;
+        mAdapter = new RecyclerViewAdapter(mDataList, this);
+        mRecyclerView.setAdapter(mAdapter);
+    }
 
+    @Override
+    public void loadData() {
+        mPresenter.fetchCombinedData();
     }
 
     @Override
@@ -106,6 +113,9 @@ public class HomeActivity extends AppCompatActivity
     public void setupBottomSheet() {
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetContainer);
         toggleBottomSheet(false);
+        mBtnBottomSheetSave.setOnClickListener(view -> {
+            toggleBottomSheet(false);
+        });
     }
 
     @Override
@@ -121,10 +131,16 @@ public class HomeActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         mPresenter.setView(this);
+        loadData();
     }
 
     @Override
     public void onSwiped(@NotNull RecyclerView.ViewHolder viewHolder, int direction, int position) {
         mAdapter.removeItem(position);
+    }
+
+    @Override
+    public void editPostTitle(int position) {
+        toggleBottomSheet(true);
     }
 }
