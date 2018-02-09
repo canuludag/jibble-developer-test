@@ -17,12 +17,16 @@ interface HomeActivityContract {
         fun hideProgressbar()
 
         fun refreshRecyclerView()
+
+        fun toggleBottomSheet(state: Boolean)
     }
 
     interface Presenter {
         fun setView(view: HomeActivityContract.View)
 
-        fun createCombinedData(): List<CombinedData>
+        fun createCombinedData(): Observable<List<CombinedData>>
+
+        fun getAllData(): List<CombinedData>
     }
 
     interface Model {

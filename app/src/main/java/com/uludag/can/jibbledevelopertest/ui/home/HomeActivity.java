@@ -52,6 +52,11 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
+    public void toggleBottomSheet(boolean state) {
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mPresenter.setView(this);

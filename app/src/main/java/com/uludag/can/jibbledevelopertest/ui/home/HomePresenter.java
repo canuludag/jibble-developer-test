@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public class HomePresenter implements HomeActivityContract.Presenter {
 
     private HomeActivityContract.View mView;
@@ -22,7 +24,13 @@ public class HomePresenter implements HomeActivityContract.Presenter {
 
     @NotNull
     @Override
-    public List<CombinedData> createCombinedData() {
+    public Observable<List<CombinedData>> createCombinedData() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public List<CombinedData> getAllData() {
         return null;
     }
 }
