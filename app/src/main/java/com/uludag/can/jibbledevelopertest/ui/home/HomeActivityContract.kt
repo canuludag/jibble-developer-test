@@ -18,7 +18,10 @@ interface HomeActivityContract {
 
         fun refreshRecyclerView()
 
+        fun setupBottomSheet();
+
         fun toggleBottomSheet(state: Boolean)
+
     }
 
     interface Presenter {
