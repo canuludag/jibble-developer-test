@@ -7,6 +7,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,6 +52,8 @@ public class HomeActivity extends AppCompatActivity
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
 
+    private ActionBar toolbar;
+
     // Dependency injections
     @Inject
     Context mContext;
@@ -71,9 +74,18 @@ public class HomeActivity extends AppCompatActivity
         // Initialize ButterKnife view injections
         ButterKnife.bind(this);
 
+        setActionBarTitle(getString(R.string.toolbar_title));
         setupBottomSheet();
         setupRecyclerView();
 
+    }
+
+    @Override
+    public void setActionBarTitle(@NotNull String title) {
+        toolbar = getSupportActionBar();
+        if (toolbar != null) {
+            toolbar.setTitle(title);
+        }
     }
 
     @Override

@@ -29,6 +29,8 @@ interface HomeActivityContract {
         fun setBottomSheetInputField(title: String)
 
         fun getBottomSheetInputData(): String
+
+        fun setActionBarTitle(title: String)
     }
 
     interface Presenter {
