@@ -2,13 +2,14 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottomSheetContainer"
-    android:elevation="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorBottomSheetBg"
     app:behavior_hideable="true"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
 
     <EditText
         android:id="@+id/etEditPostTitle"
@@ -20,6 +21,7 @@
         android:layout_marginTop="32dp"
         android:hint="@string/hint_edit_post_title"
         android:imeOptions="actionDone"
+        android:textColor="@color/colorText"
         android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/btnBottomSheetSave"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,5 +39,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/bottomsheet_title_info"
+        app:layout_constraintStart_toStartOf="@+id/etEditPostTitle"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -137,6 +137,17 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
+    public void setBottomSheetInputField(@NotNull String title) {
+        mEditPostTitle.setText(title);
+    }
+
+    @NotNull
+    @Override
+    public String getBottomSheetInputData() {
+        return mEditPostTitle.getText().toString();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mPresenter.setView(this);
@@ -150,6 +161,16 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void editPostTitle(int position) {
+        setBottomSheetInputField(mDataList.get(position).getPost().getTitle());
         toggleBottomSheet(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            toggleBottomSheet(false);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

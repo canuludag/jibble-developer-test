@@ -25,6 +25,10 @@ interface HomeActivityContract {
         fun populateAdapter(dataList: MutableList<CombinedData>)
 
         fun displaySnackBar(message: String)
+
+        fun setBottomSheetInputField(title: String)
+
+        fun getBottomSheetInputData(): String
     }
 
     interface Presenter {

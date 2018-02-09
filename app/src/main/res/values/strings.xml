@@ -4,4 +4,5 @@
     <string name="hint_edit_post_title">Edit post title</string>
     <string name="btn_save">SAVE</string>
     <string name="snackbar_error_fetching_data">An error occurred while loading the data :(</string>
+    <string name="bottomsheet_title_info">Edit Post Title</string>
 </resources>
