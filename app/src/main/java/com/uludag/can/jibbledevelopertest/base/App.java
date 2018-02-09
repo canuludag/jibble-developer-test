@@ -5,6 +5,7 @@ import android.app.Application;
 import com.uludag.can.jibbledevelopertest.di.AppComponent;
 import com.uludag.can.jibbledevelopertest.di.DaggerAppComponent;
 import com.uludag.can.jibbledevelopertest.networking.ApiModule;
+import com.uludag.can.jibbledevelopertest.ui.home.HomeModule;
 
 public class App extends Application {
 
@@ -18,6 +19,7 @@ public class App extends Application {
         mAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .apiModule(new ApiModule())
+                .homeModule(new HomeModule())
                 .build();
     }
 

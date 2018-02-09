@@ -22,7 +22,7 @@ interface HomeActivityContract {
     interface Presenter {
         fun setView(view: HomeActivityContract.View)
 
-        fun getCombinedData(): List<CombinedData>
+        fun createCombinedData(): List<CombinedData>
     }
 
     interface Model {
