@@ -55,22 +55,22 @@ public class HomePresenter implements HomeActivityContract.Presenter {
         Observable.zip(postsObservable, albumsObservable, usersObservable
                 , (postResponses, albumResponses, userResponses) -> {
 
-            // For random index selection from results
-            // Each endpoint request have different size of results
-            Random rand = new Random();
+                    // For random index selection from results
+                    // Each endpoint request have different size of results
+                    Random rand = new Random();
 
-            // We are populating data list randomly. Duplicate data may possible.
-            for (int i = 0; i < 30; i++) {
-                int randomPostIndex = rand.nextInt(postResponses.size());
-                int randomAlbumIndex = rand.nextInt(albumResponses.size());
-                int randomUserIndex = rand.nextInt(userResponses.size());
+                    // We are populating data list randomly. Duplicate data may possible.
+                    for (int i = 0; i < 30; i++) {
+                        int randomPostIndex = rand.nextInt(postResponses.size());
+                        int randomAlbumIndex = rand.nextInt(albumResponses.size());
+                        int randomUserIndex = rand.nextInt(userResponses.size());
 
-                dataList.add(new CombinedData(postResponses.get(randomPostIndex),
-                        albumResponses.get(randomAlbumIndex), userResponses.get(randomUserIndex)));
-            }
+                        dataList.add(new CombinedData(postResponses.get(randomPostIndex),
+                                albumResponses.get(randomAlbumIndex), userResponses.get(randomUserIndex)));
+                    }
 
-            return dataList;
-        }).doOnComplete(() -> {
+                    return dataList;
+                }).doOnComplete(() -> {
             // Request completed, populate the adapter and list
             mView.populateAdapter(dataList);
             mView.hideProgressbar();
@@ -86,10 +86,12 @@ public class HomePresenter implements HomeActivityContract.Presenter {
 
     @Override
     public boolean updatePostTitle(@NonNull String title, int position, @NotNull ArrayList<CombinedData> dataList) {
-            dataList.get(position).getPost().setTitle(title);
-            mView.refreshRecyclerView(dataList);
+        String oldTitle = dataList.get(position).getPost().getTitle();
 
-            return !title.equals(dataList.get(position).getPost().getTitle());
+        dataList.get(position).getPost().setTitle(title);
+        mView.refreshRecyclerView(dataList);
+
+        return !oldTitle.equals(dataList.get(position).getPost().getTitle());
     }
 
     @NonNull
