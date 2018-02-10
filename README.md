@@ -11,6 +11,7 @@ Prerequisites
 Fake API That Used In This Project
 ------------------------------------
 **Base URL:** https://jsonplaceholder.typicode.com 
+
 **Endpoints:**
 * /posts	*(100 items available)*
 * /albums	*(100 items available)*
@@ -25,7 +26,7 @@ Main Libraries That Used In This Project
 * [ButterKnife][2] --> *(For view injection)*
 * [Retrofit][3] --> *(For network requests)*
 * [RxJava & RxAndroid][4] --> *(For reactive programming)*
-* [GSON][5] --> *(For object serialization)*
+* [gson][5] --> *(For object serialization)*
 
 Dagger Modules That Created For This Project
 -----------------------------------
@@ -42,9 +43,9 @@ Main Model Classes That Created For This Project
 
 Demo
 ----
-![](./art/art_demo_1) ![](./art/art_demo_2) 
+![](./art/art_demo_1.png) ![](./art/art_demo_2.png) 
 
-![](./art/art_demo_3) ![](./art/art_demo_4)
+![](./art/art_demo_3.png) ![](./art/art_demo_4.png)
 
 Developed By
 ---------------
