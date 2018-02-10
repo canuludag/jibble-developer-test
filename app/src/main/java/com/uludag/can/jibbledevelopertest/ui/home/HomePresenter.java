@@ -84,7 +84,12 @@ public class HomePresenter implements HomeActivityContract.Presenter {
 
     @Override
     public void updatePostTitle(@NonNull String title, int position, @NotNull ArrayList<CombinedData> dataList) {
-        dataList.get(position).getPost().setTitle(title);
-        mView.refreshRecyclerView(dataList);
+        if (title.length() > 0) {
+            dataList.get(position).getPost().setTitle(title);
+            mView.refreshRecyclerView(dataList);
+        } else {
+            mView.displaySnackBar(mContext.getString(R.string.snackbar_message_empty_title));
+        }
+        
     }
 }

@@ -82,8 +82,6 @@ public class HomeActivity extends AppCompatActivity
     TextView tvDataDetailPostBody;
 
 
-    private ActionBar toolbar;
-
     // Dependency injections
     @Inject
     Context mContext;
@@ -117,7 +115,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void setActionBarTitle(@NotNull String title) {
-        toolbar = getSupportActionBar();
+        ActionBar toolbar = getSupportActionBar();
         if (toolbar != null) {
             toolbar.setTitle(title);
         }
@@ -171,8 +169,8 @@ public class HomeActivity extends AppCompatActivity
         mBtnBottomSheetSave.setOnClickListener(view -> {
             String newTitle = getBottomSheetInputData();
             mPresenter.updatePostTitle(newTitle, editTitlePosition, mDataList);
-            // TODO:cu There is a bug. Bottom Sheet not closing after keyboard disappears
             toggleEditDataBottomSheet(false);
+            mBottomSheetContainerEditData.setVisibility(View.GONE);
             hideSoftKeyboard();
         });
 
@@ -184,6 +182,8 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void toggleEditDataBottomSheet(boolean state) {
         if (state) {
+            if (mBottomSheetContainerEditData.getVisibility()
+                    == View.GONE) mBottomSheetContainerEditData.setVisibility(View.VISIBLE);
             mEditDataBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         } else {
             mEditDataBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
