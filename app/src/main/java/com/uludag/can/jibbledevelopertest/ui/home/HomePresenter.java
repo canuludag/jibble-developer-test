@@ -1,9 +1,7 @@
 package com.uludag.can.jibbledevelopertest.ui.home;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.uludag.can.jibbledevelopertest.R;
 import com.uludag.can.jibbledevelopertest.models.Album;
 import com.uludag.can.jibbledevelopertest.models.CombinedData;
 import com.uludag.can.jibbledevelopertest.models.Post;
@@ -21,14 +19,12 @@ import io.reactivex.Observable;
 
 public class HomePresenter implements HomeActivityContract.Presenter {
 
-    private Context mContext;
     private HomeActivityContract.View mView;
     private HomeActivityContract.Model mModel;
 
     @Inject
-    HomePresenter(HomeActivityContract.Model model, Context context) {
+    public HomePresenter(HomeActivityContract.Model model) {
         mModel = model;
-        mContext = context;
     }
 
     @Override
@@ -82,7 +78,7 @@ public class HomePresenter implements HomeActivityContract.Presenter {
             mView.hideProgressbar();
             mView.toggleEmptyStates(true);
             // Inform the user about the request fail
-            mView.displayFailSnackBar(mContext.getString(R.string.snackbar_error_fetching_data));
+            mView.displayFailSnackBar();
             error.printStackTrace();
             return new ArrayList<>();
         }).subscribe();

@@ -233,9 +233,9 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void displayFailSnackBar(@NotNull String message) {
+    public void displayFailSnackBar() {
         Snackbar
-                .make(mCoordinatorContainer, message, Snackbar.LENGTH_INDEFINITE)
+                .make(mCoordinatorContainer, getString(R.string.snackbar_error_fetching_data), Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_action_retry, view -> {
                     mPresenter.fetchCombinedData();
                 })
