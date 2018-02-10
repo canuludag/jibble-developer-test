@@ -198,7 +198,12 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void displaySnackBar(@NotNull String message) {
-        Snackbar.make(mCoordinatorContainer, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar
+                .make(mCoordinatorContainer, message, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.snackbar_action_retry, view -> {
+                    mPresenter.fetchCombinedData();
+                })
+                .show();
     }
 
     @Override
@@ -250,6 +255,7 @@ public class HomeActivity extends AppCompatActivity
     public void editPostTitle(int position) {
         editTitlePosition = position;
         setEditDataBottomSheetFields(position);
+        toggleDisplayDataBottomSheet(false);
         toggleEditDataBottomSheet(true);
     }
 
@@ -257,6 +263,7 @@ public class HomeActivity extends AppCompatActivity
     public void displayDataDetail(int dataPosition) {
         displayDataDetailPosition = dataPosition;
         setDetailBottomSheetFields(dataPosition);
+        toggleEditDataBottomSheet(false);
         mDisplayDataBottomSheetBehavior
                 .setPeekHeight(180);
         toggleDisplayDataBottomSheet(true);
@@ -266,6 +273,9 @@ public class HomeActivity extends AppCompatActivity
     public void onBackPressed() {
         if (mEditDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             toggleEditDataBottomSheet(false);
+        } else if (mDisplayDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED
+                || mDisplayDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+            toggleDisplayDataBottomSheet(false);
         } else {
             super.onBackPressed();
         }
@@ -308,16 +318,20 @@ public class HomeActivity extends AppCompatActivity
                 loadData();
             }
 
+            // Prevent keyboard opening due to edit text focus
+            mEditPostTitle.clearFocus();
+
             // Check if any bottom sheet is displayed
             // If so fill the fields
-            if (mDisplayDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            if (mDisplayDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED
+                    || mDisplayDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                 setDetailBottomSheetFields(displayDataDetailPosition);
-            } else if (mEditDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            } else if (mEditDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED
+                    || mEditDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                 setEditDataBottomSheetFields(editTitlePosition);
             }
 
-            // Prevent keyboard opening due to edit text focus
-            mEditPostTitle.clearFocus();
+            hideSoftKeyboard();
         }
     }
 

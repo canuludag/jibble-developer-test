@@ -50,7 +50,6 @@ public class HomePresenter implements HomeActivityContract.Presenter {
         Observable<List<Album>> albumsObservable = mModel.getAlbums();
         Observable<List<User>> usersObservable = mModel.getUsers();
 
-        // TODO:cu An error occures while fetching data
         // Combine and fetch the data
         Observable.zip(postsObservable, albumsObservable, usersObservable
                 , (postResponses, albumResponses, userResponses) -> {
@@ -72,10 +71,6 @@ public class HomePresenter implements HomeActivityContract.Presenter {
         }).doOnComplete(() -> {
             mView.populateAdapter(dataList);
             mView.hideProgressbar();
-        }).doOnError(throwable -> {
-            mView.hideProgressbar();
-            mView.displaySnackBar(mContext.getString(R.string.snackbar_error_fetching_data));
-            throwable.printStackTrace();
         }).onErrorReturn(error -> {
             mView.hideProgressbar();
             mView.displaySnackBar(mContext.getString(R.string.snackbar_error_fetching_data));

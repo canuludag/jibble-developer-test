@@ -6,4 +6,5 @@
     <string name="snackbar_error_fetching_data">An error occurred while loading the data :(</string>
     <string name="bottomsheet_title_info">Edit Post Title</string>
     <string name="toolbar_title">Jibble Data Loader</string>
+    <string name="snackbar_action_retry">Retry</string>
 </resources>
