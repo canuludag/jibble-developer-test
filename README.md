@@ -21,7 +21,7 @@ Fake API That Used In This Project
 * _limit *(limits the results with a given value)*
 
 Main Libraries That Used In This Project
-------------------------------------
+----------------------------------------
 * [Dagger][1] --> *(For dependency injection)*
 * [ButterKnife][2] --> *(For view injection)*
 * [Retrofit][3] --> *(For network requests)*
@@ -29,17 +29,23 @@ Main Libraries That Used In This Project
 * [gson][5] --> *(For object serialization)*
 
 Dagger Modules That Created For This Project
------------------------------------
+--------------------------------------------
 * **AppModule** --> *(Provides application context)*
 * **ApiModule** --> *(Provides API services)*
 * **HomeModule** --> *(Provides Model and Presenter classes)*
 
 Main Model Classes That Created For This Project
------------------------------------
+------------------------------------------------
 * **Post** --> *(For the result of posts endpoint)*
 * **Album** --> *(For the result of albums endpoint)*
 * **User** --> *(For the result of users endpoint)*
 * **CombinedData** --> *(For combining all 3 results together)*
+
+Test Classes That Created For This Project
+------------------------------------------------
+* **HomePresenterTests** --> *(Unit tests with JUnit and Mockito for Presenter)*
+* **HomeActivityTest** --> *(Instrumentation test with Espresso Test Recorder)*
+* **HomeActivityTest2** --> *(Instrumentation test with Espresso Test Recorder)*
 
 Demo
 ----
