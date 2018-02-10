@@ -4,6 +4,7 @@ package com.uludag.can.jibbledevelopertest.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+// Simple model class for '/albums' request results
 public class Album {
 
     @SerializedName("userId")

@@ -6,6 +6,7 @@ import com.uludag.can.jibbledevelopertest.models.Post
 import com.uludag.can.jibbledevelopertest.models.User
 import io.reactivex.Observable
 
+// Contains interface methods for the MVP Architecture
 interface HomeActivityContract {
     interface View {
         fun setupRecyclerView()
@@ -48,7 +49,11 @@ interface HomeActivityContract {
 
         fun fetchCombinedData()
 
-        fun updatePostTitle(title: String, position: Int, dataList: ArrayList<CombinedData>)
+        fun updatePostTitle(title: String, position: Int, dataList: ArrayList<CombinedData>): Boolean
+
+        fun removeItemFromDataList(position: Int, dataList: ArrayList<CombinedData>): ArrayList<CombinedData>
+
+        fun editDataInputValidation(input: String): Boolean
     }
 
     interface Model {

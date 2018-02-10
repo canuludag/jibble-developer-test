@@ -43,16 +43,8 @@ class RecyclerViewAdapter(private var dataList: ArrayList<CombinedData>,
     }
 
     class CustomViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        // We use this view for swipe right on recyclerview
         val viewForeground: RelativeLayout = view.viewForeground
-    }
-
-    // Remove the item form the data list and update the adapter
-    fun removeItem(position: Int) {
-        if (!dataList.isEmpty()) {
-            dataList.removeAt(position)
-            notifyItemRemoved(position)
-            notifyDataSetChanged()
-        }
     }
 
 }

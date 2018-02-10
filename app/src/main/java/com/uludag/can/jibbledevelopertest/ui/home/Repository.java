@@ -21,7 +21,7 @@ public class Repository  implements HomeActivityContract.Model{
     private ApiService mApiService;
 
     @Inject
-    public Repository(ApiService apiService) {
+    Repository(ApiService apiService) {
         mApiService = apiService;
     }
 

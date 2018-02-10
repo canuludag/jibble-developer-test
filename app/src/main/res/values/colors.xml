@@ -9,5 +9,5 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorSwipeBgRed">#d50000</color>
     <color name="colorListItemBg">#e4e3e3</color>
-    <color name="colorBottomSheetBg">#ffffff</color>
+    <color name="colorBottomSheetBg">#f2f2f2</color>
 </resources>

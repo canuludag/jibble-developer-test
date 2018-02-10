@@ -14,7 +14,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,12 +48,13 @@ public class HomeActivity extends AppCompatActivity
         implements HomeActivityContract.View, RecyclerItemTouchHelperListener,
         EditPostTitleListener, DisplayDataDetailListener {
 
+    // State saving key constants
     private final static String LIST_STATE_KEY = "recycler_list_state";
     private final static String LIST_DATASET = "recycler_dataset";
     private final static String EDIT_TITLE_POSITION = "edit_title_position";
     private final static String DISPLAY_DATA_DETAIL_POSITION = "display_data_detail_position";
     private final static String EMPTY_STATE_VISIBILITY = "empty_state_visibility";
-    private Parcelable listState;
+    private Parcelable listState; // Recyclerview state
     private int editTitlePosition = -1;
     private int displayDataDetailPosition = -1;
     private boolean emptyStateVisibility = false;
@@ -88,7 +88,6 @@ public class HomeActivity extends AppCompatActivity
     TextView tvDataDetailAlbumTitle;
     @BindView(R.id.tvDataDetailPostBody)
     TextView tvDataDetailPostBody;
-
 
     // Dependency injections
     @Inject
@@ -183,13 +182,16 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void setupBottomSheets() {
-        // Edit Data Bottom Sheet
+        // Edit Data Bottom Sheet setup
         mEditDataBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetContainerEditData);
         toggleEditDataBottomSheet(false);
+
         mBtnBottomSheetSave.setOnClickListener(view -> {
             String newTitle = getBottomSheetInputData();
-            if (newTitle.length() > 0) {
+
+            if (mPresenter.editDataInputValidation(newTitle)) {
                 mPresenter.updatePostTitle(newTitle, editTitlePosition, mDataList);
+
                 toggleEditDataBottomSheet(false);
                 mBottomSheetContainerEditData.setVisibility(View.GONE);
                 hideSoftKeyboard();
@@ -199,7 +201,7 @@ public class HomeActivity extends AppCompatActivity
 
         });
 
-        // Display Data Bottom Sheet
+        // Display Data Bottom Sheet setup
         mDisplayDataBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetContainerDisplayDetail);
         toggleDisplayDataBottomSheet(false);
     }
@@ -242,17 +244,20 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void setEditDataBottomSheetFields(int dataPosition) {
+        // Set EditText field with selected row item info
         mEditPostTitle.setText(mDataList.get(dataPosition).getPost().getTitle());
     }
 
     @NotNull
     @Override
     public String getBottomSheetInputData() {
+        // Get new title text that user entered
         return mEditPostTitle.getText().toString();
     }
 
     @Override
     public void setDetailBottomSheetFields(int dataPosition) {
+        // Set detail fields with selected row item info
         CombinedData data = mDataList.get(dataPosition);
         tvDataDetailPostTitle.setText(data.getPost().getTitle());
         tvDataDetailUser.setText(data.getUser().getName());
@@ -282,7 +287,10 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onSwiped(@NotNull RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        mAdapter.removeItem(position);
+        // Remove swiped item from the adapter and data list
+        mDataList = mPresenter.removeItemFromDataList(position, mDataList);
+        mAdapter.notifyItemRemoved(position);
+        mAdapter.notifyDataSetChanged();
 
         // If the selected position is equal to deleted index hide bottom sheets,
         // because there is no data to display
@@ -319,7 +327,6 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void displayDataDetail(int dataPosition) {
-        Log.d("TAG", dataPosition+"");
         displayDataDetailPosition = dataPosition;
         setDetailBottomSheetFields(dataPosition);
         toggleEditDataBottomSheet(false);

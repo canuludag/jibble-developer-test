@@ -63,6 +63,7 @@ public class HomePresenter implements HomeActivityContract.Presenter {
             // Each endpoint request have different size of results
             Random rand = new Random();
 
+            // We are populating data list randomly. Duplicate data may possible.
             for (int i = 0; i < 30; i++) {
                 int randomPostIndex = rand.nextInt(postResponses.size());
                 int randomAlbumIndex = rand.nextInt(albumResponses.size());
@@ -74,11 +75,13 @@ public class HomePresenter implements HomeActivityContract.Presenter {
 
             return dataList;
         }).doOnComplete(() -> {
+            // Request completed, populate the adapter and list
             mView.populateAdapter(dataList);
             mView.hideProgressbar();
         }).onErrorReturn(error -> {
             mView.hideProgressbar();
             mView.toggleEmptyStates(true);
+            // Inform the user about the request fail
             mView.displayFailSnackBar(mContext.getString(R.string.snackbar_error_fetching_data));
             error.printStackTrace();
             return new ArrayList<>();
@@ -86,13 +89,25 @@ public class HomePresenter implements HomeActivityContract.Presenter {
     }
 
     @Override
-    public void updatePostTitle(@NonNull String title, int position, @NotNull ArrayList<CombinedData> dataList) {
-        if (title.length() > 0) {
+    public boolean updatePostTitle(@NonNull String title, int position, @NotNull ArrayList<CombinedData> dataList) {
             dataList.get(position).getPost().setTitle(title);
             mView.refreshRecyclerView(dataList);
-        } else {
-            mView.displaySnackBar(mContext.getString(R.string.snackbar_message_empty_title));
+
+            return !title.equals(dataList.get(position).getPost().getTitle());
+    }
+
+    @NonNull
+    @Override
+    public ArrayList<CombinedData> removeItemFromDataList(int position, @NonNull ArrayList<CombinedData> dataList) {
+        if (!dataList.isEmpty()) {
+            dataList.remove(position);
         }
-        
+
+        return dataList;
+    }
+
+    @Override
+    public boolean editDataInputValidation(@NotNull String input) {
+        return input.length() > 0;
     }
 }
