@@ -53,9 +53,11 @@ public class HomeActivity extends AppCompatActivity
     private final static String LIST_DATASET = "recycler_dataset";
     private final static String EDIT_TITLE_POSITION = "edit_title_position";
     private final static String DISPLAY_DATA_DETAIL_POSITION = "display_data_detail_position";
+    private final static String EMPTY_STATE_VISIBILITY = "empty_state_visibility";
     private Parcelable listState;
     private int editTitlePosition = -1;
     private int displayDataDetailPosition = -1;
+    private boolean emptyStateVisibility = false;
 
     // View injections
     @BindView(R.id.coordinatorContainer)
@@ -169,6 +171,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void toggleEmptyStates(boolean state) {
+        emptyStateVisibility = state;
         if (state) {
             ivEmptyState.setVisibility(View.VISIBLE);
             tvEmptyState.setVisibility(View.VISIBLE);
@@ -369,6 +372,9 @@ public class HomeActivity extends AppCompatActivity
         // Convert ArrayList to serialized string with GSON
         String serializedData = gson.toJson(mDataList);
         outState.putString(LIST_DATASET, serializedData);
+
+        // Empty states visibility
+        outState.putBoolean(EMPTY_STATE_VISIBILITY, emptyStateVisibility);
     }
 
     @Override
@@ -380,6 +386,10 @@ public class HomeActivity extends AppCompatActivity
 
             editTitlePosition = savedInstanceState.getInt(EDIT_TITLE_POSITION);
             displayDataDetailPosition = savedInstanceState.getInt(DISPLAY_DATA_DETAIL_POSITION);
+
+            // Get empty states visibility
+            emptyStateVisibility = savedInstanceState.getBoolean(EMPTY_STATE_VISIBILITY);
+            toggleEmptyStates(emptyStateVisibility);
 
             // Convert serialized string to ArrayList with GSON
             String serializedData = savedInstanceState.getString(LIST_DATASET);
