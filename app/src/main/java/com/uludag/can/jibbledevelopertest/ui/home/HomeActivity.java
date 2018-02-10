@@ -19,11 +19,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.uludag.can.jibbledevelopertest.R;
 import com.uludag.can.jibbledevelopertest.base.App;
+import com.uludag.can.jibbledevelopertest.listeners.DisplayDataDetailListener;
 import com.uludag.can.jibbledevelopertest.listeners.EditPostTitleListener;
 import com.uludag.can.jibbledevelopertest.listeners.RecyclerItemTouchHelperListener;
 import com.uludag.can.jibbledevelopertest.models.CombinedData;
@@ -39,28 +41,43 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity
-        implements HomeActivityContract.View, RecyclerItemTouchHelperListener, EditPostTitleListener {
+        implements HomeActivityContract.View, RecyclerItemTouchHelperListener,
+        EditPostTitleListener, DisplayDataDetailListener {
 
     private final static String LIST_STATE_KEY = "recycler_list_state";
     private final static String LIST_DATASET = "recycler_dataset";
     private final static String EDIT_TITLE_POSITION = "edit_title_position";
+    private final static String DISPLAY_DATA_DETAIL_POSITION = "display_data_detail_position";
     private Parcelable listState;
     private int editTitlePosition = -1;
+    private int displayDataDetailPosition = -1;
 
     // View injections
     @BindView(R.id.coordinatorContainer)
     CoordinatorLayout mCoordinatorContainer;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
-    // For the BottomSheet
-    @BindView(R.id.bottomSheetContainer)
-    ConstraintLayout mBottomSheetContainer;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
+    // For the BottomSheet Edit Data
+    @BindView(R.id.bottomSheetContainerEditData)
+    ConstraintLayout mBottomSheetContainerEditData;
     @BindView(R.id.etEditPostTitle)
     EditText mEditPostTitle;
     @BindView(R.id.btnBottomSheetSave)
     Button mBtnBottomSheetSave;
-    @BindView(R.id.progressBar)
-    ProgressBar mProgressBar;
+    // For the BottomSheet Display Detail
+    @BindView(R.id.bottomSheetContainerDisplayDetail)
+    ConstraintLayout mBottomSheetContainerDisplayDetail;
+    @BindView(R.id.tvDataDetailPostTitle)
+    TextView tvDataDetailPostTitle;
+    @BindView(R.id.tvDataDetailUser)
+    TextView tvDataDetailUser;
+    @BindView(R.id.tvDataDetailAlbumTitle)
+    TextView tvDataDetailAlbumTitle;
+    @BindView(R.id.tvDataDetailPostBody)
+    TextView tvDataDetailPostBody;
+
 
     private ActionBar toolbar;
 
@@ -73,7 +90,8 @@ public class HomeActivity extends AppCompatActivity
     private ArrayList<CombinedData> mDataList;
     private RecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private BottomSheetBehavior mBottomSheetBehavior;
+    private BottomSheetBehavior mEditDataBottomSheetBehavior;
+    private BottomSheetBehavior mDisplayDataBottomSheetBehavior;
 
     // For serialization of data
     Gson gson = new Gson();
@@ -89,7 +107,7 @@ public class HomeActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         setActionBarTitle(getString(R.string.toolbar_title));
-        setupBottomSheet();
+        setupBottomSheets();
         setupRecyclerView();
 
     }
@@ -123,7 +141,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void populateAdapter(@NonNull ArrayList<CombinedData> combinedDataList) {
         mDataList = combinedDataList;
-        mAdapter = new RecyclerViewAdapter(mDataList, this);
+        mAdapter = new RecyclerViewAdapter(mDataList, this, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -143,24 +161,38 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void setupBottomSheet() {
-        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetContainer);
-        toggleBottomSheet(false);
+    public void setupBottomSheets() {
+        // Edit Data Bottom Sheet
+        mEditDataBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetContainerEditData);
+        toggleEditDataBottomSheet(false);
         mBtnBottomSheetSave.setOnClickListener(view -> {
             String newTitle = getBottomSheetInputData();
             mPresenter.updatePostTitle(newTitle, editTitlePosition, mDataList);
             // TODO:cu There is a bug. Bottom Sheet not closing after keyboard disappears
-            toggleBottomSheet(false);
+            toggleEditDataBottomSheet(false);
             hideSoftKeyboard();
         });
+
+        // Display Data Bottom Sheet
+        mDisplayDataBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetContainerDisplayDetail);
+        toggleDisplayDataBottomSheet(false);
     }
 
     @Override
-    public void toggleBottomSheet(boolean state) {
+    public void toggleEditDataBottomSheet(boolean state) {
         if (state) {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            mEditDataBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         } else {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            mEditDataBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
+    }
+
+    @Override
+    public void toggleDisplayDataBottomSheet(boolean state) {
+        if (state) {
+            mDisplayDataBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        } else {
+            mDisplayDataBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
     }
 
@@ -170,8 +202,8 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void setBottomSheetInputField(@NotNull String title) {
-        mEditPostTitle.setText(title);
+    public void setEditDataBottomSheetFields(int dataPosition) {
+        mEditPostTitle.setText(mDataList.get(dataPosition).getPost().getTitle());
     }
 
     @NotNull
@@ -181,8 +213,17 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
+    public void setDetailBottomSheetFields(int dataPosition) {
+        CombinedData data = mDataList.get(dataPosition);
+        tvDataDetailPostTitle.setText(data.getPost().getTitle());
+        tvDataDetailUser.setText(data.getUser().getName());
+        tvDataDetailAlbumTitle.setText(data.getAlbum().getTitle());
+        tvDataDetailPostBody.setText(data.getPost().getBody());
+    }
+
+    @Override
     public void hideSoftKeyboard() {
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         View view = this.getCurrentFocus();
         if (imm != null && view != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -208,14 +249,23 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void editPostTitle(int position) {
         editTitlePosition = position;
-        setBottomSheetInputField(mDataList.get(position).getPost().getTitle());
-        toggleBottomSheet(true);
+        setEditDataBottomSheetFields(position);
+        toggleEditDataBottomSheet(true);
+    }
+
+    @Override
+    public void displayDataDetail(int dataPosition) {
+        displayDataDetailPosition = dataPosition;
+        setDetailBottomSheetFields(dataPosition);
+        mDisplayDataBottomSheetBehavior
+                .setPeekHeight(180);
+        toggleDisplayDataBottomSheet(true);
     }
 
     @Override
     public void onBackPressed() {
-        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-            toggleBottomSheet(false);
+        if (mEditDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            toggleEditDataBottomSheet(false);
         } else {
             super.onBackPressed();
         }
@@ -226,10 +276,13 @@ public class HomeActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         // Save the recyclerview state
         listState = mLayoutManager.onSaveInstanceState();
-        outState.putInt(EDIT_TITLE_POSITION, editTitlePosition);
         outState.putParcelable(LIST_STATE_KEY, listState);
 
-        // Convert ArrayList to serialized data with GSON
+        // Selected Data positions
+        outState.putInt(EDIT_TITLE_POSITION, editTitlePosition);
+        outState.putInt(DISPLAY_DATA_DETAIL_POSITION, displayDataDetailPosition);
+
+        // Convert ArrayList to serialized string with GSON
         String serializedData = gson.toJson(mDataList);
         outState.putString(LIST_DATASET, serializedData);
     }
@@ -239,18 +292,33 @@ public class HomeActivity extends AppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
         // Restore list state
         if (savedInstanceState != null) {
-            editTitlePosition = savedInstanceState.getInt(EDIT_TITLE_POSITION);
             listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
 
-            // Convert serialized data to ArrayList with GSON
+            editTitlePosition = savedInstanceState.getInt(EDIT_TITLE_POSITION);
+            displayDataDetailPosition = savedInstanceState.getInt(DISPLAY_DATA_DETAIL_POSITION);
+
+            // Convert serialized string to ArrayList with GSON
             String serializedData = savedInstanceState.getString(LIST_DATASET);
-            mDataList = gson.fromJson(serializedData, new TypeToken<ArrayList<CombinedData>>(){}.getType());
+            mDataList = gson.fromJson(serializedData, new TypeToken<ArrayList<CombinedData>>() {
+            }.getType());
 
             if (mDataList != null) {
                 populateAdapter(mDataList);
             } else {
                 loadData();
             }
+
+            // Check if any bottom sheet is displayed
+            // If so fill the fields
+            if (mDisplayDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                setDetailBottomSheetFields(displayDataDetailPosition);
+            } else if (mEditDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                setEditDataBottomSheetFields(editTitlePosition);
+            }
+
+            // Prevent keyboard opening due to edit text focus
+            mEditPostTitle.clearFocus();
         }
     }
+
 }

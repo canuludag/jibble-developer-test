@@ -18,17 +18,21 @@ interface HomeActivityContract {
 
         fun refreshRecyclerView(refreshedDataList: ArrayList<CombinedData>)
 
-        fun setupBottomSheet()
+        fun setupBottomSheets()
 
-        fun toggleBottomSheet(state: Boolean)
+        fun toggleEditDataBottomSheet(state: Boolean)
+
+        fun toggleDisplayDataBottomSheet(state: Boolean)
 
         fun populateAdapter(dataList: ArrayList<CombinedData>)
 
         fun displaySnackBar(message: String)
 
-        fun setBottomSheetInputField(title: String)
+        fun setEditDataBottomSheetFields(dataPosition: Int)
 
         fun getBottomSheetInputData(): String
+
+        fun setDetailBottomSheetFields(dataPosition: Int)
 
         fun setActionBarTitle(title: String)
 

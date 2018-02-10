@@ -2,9 +2,10 @@
 <resources>
     <color name="colorPrimary">#ff6e1f</color>
     <color name="colorPrimaryDark">#d15613</color>
-    <color name="colorAccent">#34799b</color>
+    <color name="colorAccent">#395ca9</color>
     <color name="colorBgDark">#363b3d</color>
     <color name="colorText">#424242</color>
+    <color name="colorTextSoft">#515151</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorSwipeBgRed">#d50000</color>
     <color name="colorListItemBg">#e4e3e3</color>

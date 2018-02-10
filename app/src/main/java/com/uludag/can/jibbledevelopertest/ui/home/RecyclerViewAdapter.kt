@@ -6,14 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.uludag.can.jibbledevelopertest.R
+import com.uludag.can.jibbledevelopertest.listeners.DisplayDataDetailListener
 import com.uludag.can.jibbledevelopertest.listeners.EditPostTitleListener
 import com.uludag.can.jibbledevelopertest.models.CombinedData
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class RecyclerViewAdapter(private var dataList: MutableList<CombinedData>, editPostTitleListener: EditPostTitleListener)
+class RecyclerViewAdapter(private var dataList: MutableList<CombinedData>,
+                          private val editPostTitleListener: EditPostTitleListener,
+                          private val displayDataDetailListener: DisplayDataDetailListener)
     : RecyclerView.Adapter<RecyclerViewAdapter.CustomViewHolder>() {
-
-    private val editPostTitleListener = editPostTitleListener
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CustomViewHolder {
         val view = LayoutInflater.from(parent?.context)
@@ -33,6 +34,10 @@ class RecyclerViewAdapter(private var dataList: MutableList<CombinedData>, editP
             holder.view.setOnLongClickListener {
                 editPostTitleListener.editPostTitle(position)
                 return@setOnLongClickListener true
+            }
+
+            holder.view.setOnClickListener {
+                displayDataDetailListener.displayDataDetail(position)
             }
         }
     }
