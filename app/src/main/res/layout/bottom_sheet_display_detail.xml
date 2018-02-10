@@ -10,38 +10,46 @@
     app:behavior_hideable="true"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-
-    <TextView
-        android:id="@+id/tvDataDetailPostTitle"
+    <RelativeLayout
+        android:id="@+id/rlPeekArea"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textColor="@color/colorAccent"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:layout_height="80dp"
+        android:background="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="ea molestias quasi exercitationem repellat qui ipsa sit aut"/>
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tvDataDetailUser"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:maxLines="1"
-        android:textColor="@color/colorText"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDataDetailPostTitle"
-        tools:text="Name: Leanne Graham"/>
+        <TextView
+            android:id="@+id/tvDataDetailPostTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="ea molestias quasi exercitationem repellat qui ipsa sit aut"/>
+
+        <TextView
+            android:id="@+id/tvDataDetailUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:maxLines="1"
+            android:textSize="16sp"
+            android:textColor="@color/colorWhite"
+            android:textStyle="italic"
+            tools:text="Name: Leanne Graham"/>
+
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/tvDataDetailAlbumTitle"
@@ -55,7 +63,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDataDetailUser"
+        app:layout_constraintTop_toBottomOf="@+id/rlPeekArea"
         tools:text="Album: sunt qui excepturi placeat culpa"/>
 
     <ScrollView
@@ -85,4 +93,5 @@
                 />
         </LinearLayout>
     </ScrollView>
+
 </android.support.constraint.ConstraintLayout>

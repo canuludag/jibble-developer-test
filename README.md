@@ -7,6 +7,7 @@ Prerequisites
 * Java 1.8
 * Kotlin Plugin 1.2.21
 * Android Studio 3.0 and above
+* Gradle 4.1
 
 Fake API That Used In This Project
 ------------------------------------

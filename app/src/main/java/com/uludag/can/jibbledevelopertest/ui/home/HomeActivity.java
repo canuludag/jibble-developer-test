@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -80,6 +81,8 @@ public class HomeActivity extends AppCompatActivity
     // For the BottomSheet Display Detail
     @BindView(R.id.bottomSheetContainerDisplayDetail)
     ConstraintLayout mBottomSheetContainerDisplayDetail;
+    @BindView(R.id.rlPeekArea)
+    RelativeLayout rlPeekArea;
     @BindView(R.id.tvDataDetailPostTitle)
     TextView tvDataDetailPostTitle;
     @BindView(R.id.tvDataDetailUser)
@@ -234,8 +237,8 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void displayFailSnackBar() {
-        Snackbar
-                .make(mCoordinatorContainer, getString(R.string.snackbar_error_fetching_data), Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(mCoordinatorContainer, getString(R.string.snackbar_error_fetching_data)
+                , Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_action_retry, view -> {
                     mPresenter.fetchCombinedData();
                 })
@@ -331,7 +334,7 @@ public class HomeActivity extends AppCompatActivity
         setDetailBottomSheetFields(dataPosition);
         toggleEditDataBottomSheet(false);
         mDisplayDataBottomSheetBehavior
-                .setPeekHeight(180);
+                .setPeekHeight(rlPeekArea.getHeight());
         toggleDisplayDataBottomSheet(true);
     }
 
