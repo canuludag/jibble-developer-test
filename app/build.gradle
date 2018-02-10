@@ -34,6 +34,14 @@ android {
             minifyEnabled true
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def date = new Date()
+                    def appName = parent.name
+                    def formattedDate = date.format('yyyyMMddHHmmss')
+                    outputFileName = "${appName}-${variant.name}-vc${variant.versionCode}-v${variant.versionName}-${formattedDate}.apk"
+                }
+            }
 
             manifestPlaceholders = [
                     appName  : rootProject.ext.APP_NAME,
