@@ -2,6 +2,7 @@ package com.uludag.can.jibbledevelopertest.ui.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
@@ -27,7 +28,7 @@ import com.uludag.can.jibbledevelopertest.utils.RecyclerViewTouchHelper;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -36,6 +37,10 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity
         implements HomeActivityContract.View, RecyclerItemTouchHelperListener, EditPostTitleListener {
+
+    private final static String LIST_STATE_KEY = "recycler_list_state";
+    private final static String LIST_DATASET = "recycler_dataset";
+    private Parcelable listState;
 
     // View injections
     @BindView(R.id.coordinatorContainer)
@@ -60,8 +65,9 @@ public class HomeActivity extends AppCompatActivity
     @Inject
     HomeActivityContract.Presenter mPresenter;
 
-    private List<CombinedData> mDataList;
+    private ArrayList<CombinedData> mDataList;
     private RecyclerViewAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     private BottomSheetBehavior mBottomSheetBehavior;
 
     @Override
@@ -90,8 +96,10 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void setupRecyclerView() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
         // Add touch helper to recyclerview
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerViewTouchHelper(0,
                 ItemTouchHelper.RIGHT, this);
@@ -104,7 +112,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void populateAdapter(@NonNull List<CombinedData> combinedDataList) {
+    public void populateAdapter(@NonNull ArrayList<CombinedData> combinedDataList) {
         mDataList = combinedDataList;
         mAdapter = new RecyclerViewAdapter(mDataList, this);
         mRecyclerView.setAdapter(mAdapter);
@@ -163,7 +171,11 @@ public class HomeActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         mPresenter.setView(this);
-        loadData();
+        if (listState != null) {
+            mLayoutManager.onRestoreInstanceState(listState); // If configuration change happened
+        } else {
+            loadData(); // If it's the first time creation
+        }
     }
 
     @Override
@@ -183,6 +195,30 @@ public class HomeActivity extends AppCompatActivity
             toggleBottomSheet(false);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save the recyclerview state
+        listState = mLayoutManager.onSaveInstanceState();
+        outState.putParcelable(LIST_STATE_KEY, listState);
+        outState.putSerializable(LIST_DATASET, mDataList);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Restore list state
+        if (savedInstanceState != null) {
+            listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+            mDataList = (ArrayList<CombinedData>) savedInstanceState.getSerializable(LIST_DATASET);
+            if (mDataList != null) {
+                populateAdapter(mDataList);
+            } else {
+                loadData();
+            }
         }
     }
 }

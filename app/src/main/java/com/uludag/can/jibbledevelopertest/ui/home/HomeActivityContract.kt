@@ -22,7 +22,7 @@ interface HomeActivityContract {
 
         fun toggleBottomSheet(state: Boolean)
 
-        fun populateAdapter(dataList: MutableList<CombinedData>)
+        fun populateAdapter(dataList: ArrayList<CombinedData>)
 
         fun displaySnackBar(message: String)
 

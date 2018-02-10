@@ -42,7 +42,7 @@ public class HomePresenter implements HomeActivityContract.Presenter {
         mView.displayProgressbar();
 
         // Create an empty data list for adapter
-        List<CombinedData> dataList = new ArrayList<>();
+        ArrayList<CombinedData> dataList = new ArrayList<>();
 
         // Get our observables for each request endpoint
         Observable<List<Post>> postsObservable = mModel.getPosts();
