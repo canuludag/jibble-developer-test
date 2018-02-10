@@ -41,6 +41,8 @@ public class HomePresenter implements HomeActivityContract.Presenter {
 
         // Display progressbar
         mView.displayProgressbar();
+        // Hide Empty states
+        mView.toggleEmptyStates(false);
         // Hide bottom sheets
         mView.toggleEditDataBottomSheet(false);
         mView.toggleDisplayDataBottomSheet(false);
@@ -76,6 +78,7 @@ public class HomePresenter implements HomeActivityContract.Presenter {
             mView.hideProgressbar();
         }).onErrorReturn(error -> {
             mView.hideProgressbar();
+            mView.toggleEmptyStates(true);
             mView.displayFailSnackBar(mContext.getString(R.string.snackbar_error_fetching_data));
             error.printStackTrace();
             return new ArrayList<>();

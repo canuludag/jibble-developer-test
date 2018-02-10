@@ -39,6 +39,8 @@ interface HomeActivityContract {
         fun setActionBarTitle(title: String)
 
         fun hideSoftKeyboard()
+
+        fun toggleEmptyStates(state: Boolean)
     }
 
     interface Presenter {

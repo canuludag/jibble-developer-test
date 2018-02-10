@@ -24,7 +24,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tvEmptyState"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <ImageView
+        android:id="@+id/ivEmptyState"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="10dp"
         android:visibility="visible"
+        android:src="@drawable/ic_empty_state_face"
         app:layout_constraintBottom_toBottomOf="@id/tvEmptyState"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -33,6 +44,7 @@
         android:id="@+id/tvEmptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:text="@string/empty_state_text"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"

@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -63,6 +64,10 @@ public class HomeActivity extends AppCompatActivity
     RecyclerView mRecyclerView;
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
+    @BindView(R.id.ivEmptyState)
+    ImageView ivEmptyState;
+    @BindView(R.id.tvEmptyState)
+    TextView tvEmptyState;
     // For the BottomSheet Edit Data
     @BindView(R.id.bottomSheetContainerEditData)
     ConstraintLayout mBottomSheetContainerEditData;
@@ -163,6 +168,17 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
+    public void toggleEmptyStates(boolean state) {
+        if (state) {
+            ivEmptyState.setVisibility(View.VISIBLE);
+            tvEmptyState.setVisibility(View.VISIBLE);
+        } else {
+            ivEmptyState.setVisibility(View.GONE);
+            tvEmptyState.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
     public void setupBottomSheets() {
         // Edit Data Bottom Sheet
         mEditDataBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetContainerEditData);
@@ -214,7 +230,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void displayFailSnackBar(@NotNull String message) {
         Snackbar
-                .make(mCoordinatorContainer, message, Snackbar.LENGTH_SHORT)
+                .make(mCoordinatorContainer, message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_action_retry, view -> {
                     mPresenter.fetchCombinedData();
                 })
