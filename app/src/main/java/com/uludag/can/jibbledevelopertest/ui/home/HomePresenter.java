@@ -41,6 +41,9 @@ public class HomePresenter implements HomeActivityContract.Presenter {
 
         // Display progressbar
         mView.displayProgressbar();
+        // Hide bottom sheets
+        mView.toggleEditDataBottomSheet(false);
+        mView.toggleDisplayDataBottomSheet(false);
 
         // Create an empty data list for adapter
         ArrayList<CombinedData> dataList = new ArrayList<>();
