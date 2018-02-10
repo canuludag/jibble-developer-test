@@ -36,7 +36,7 @@ ext {
     daggerVersion = '2.11'
     retrofitVersion = '2.3.0'
     loggingInterceptorVersion = '3.6.0'
-    rxJava = '2.1.4'
+    rxJava = '2.1.8'
     rxAndroid = '2.0.1'
     gsonVersion = '2.8.2'
     testRunnerVersion = '1.0.1'
