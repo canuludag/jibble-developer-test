@@ -16,7 +16,7 @@ interface HomeActivityContract {
 
         fun hideProgressbar()
 
-        fun refreshRecyclerView()
+        fun refreshRecyclerView(refreshedDataList: ArrayList<CombinedData>)
 
         fun setupBottomSheet()
 
@@ -31,12 +31,16 @@ interface HomeActivityContract {
         fun getBottomSheetInputData(): String
 
         fun setActionBarTitle(title: String)
+
+        fun hideSoftKeyboard()
     }
 
     interface Presenter {
         fun setView(view: HomeActivityContract.View)
 
         fun fetchCombinedData()
+
+        fun updatePostTitle(title: String, position: Int, dataList: ArrayList<CombinedData>)
     }
 
     interface Model {

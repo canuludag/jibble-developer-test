@@ -1,6 +1,7 @@
 package com.uludag.can.jibbledevelopertest.ui.home;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.uludag.can.jibbledevelopertest.R;
 import com.uludag.can.jibbledevelopertest.models.Album;
@@ -78,4 +79,9 @@ public class HomePresenter implements HomeActivityContract.Presenter {
                 .subscribe();
     }
 
+    @Override
+    public void updatePostTitle(@NonNull String title, int position, @NotNull ArrayList<CombinedData> dataList) {
+        dataList.get(position).getPost().setTitle(title);
+        mView.refreshRecyclerView(dataList);
+    }
 }

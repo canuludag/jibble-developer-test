@@ -22,7 +22,7 @@
         android:hint="@string/hint_edit_post_title"
         android:imeOptions="actionDone"
         android:textColor="@color/colorText"
-        android:inputType="text"
+        android:inputType="text|textNoSuggestions"
         app:layout_constraintBottom_toTopOf="@+id/btnBottomSheetSave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,12 +43,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/bottomsheet_title_info"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:text="@string/bottomsheet_title_info"
-        app:layout_constraintStart_toStartOf="@+id/etEditPostTitle"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/etEditPostTitle"/>
 
 </android.support.constraint.ConstraintLayout>

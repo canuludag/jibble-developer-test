@@ -1,6 +1,6 @@
 package com.uludag.can.jibbledevelopertest.models;
 
-public class CombinedData {
+public class CombinedData{
     private Post mPost;
     private Album mAlbum;
     private User mUser;

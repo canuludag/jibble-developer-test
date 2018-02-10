@@ -15,10 +15,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.uludag.can.jibbledevelopertest.R;
 import com.uludag.can.jibbledevelopertest.base.App;
 import com.uludag.can.jibbledevelopertest.listeners.EditPostTitleListener;
@@ -40,7 +43,9 @@ public class HomeActivity extends AppCompatActivity
 
     private final static String LIST_STATE_KEY = "recycler_list_state";
     private final static String LIST_DATASET = "recycler_dataset";
+    private final static String EDIT_TITLE_POSITION = "edit_title_position";
     private Parcelable listState;
+    private int editTitlePosition = -1;
 
     // View injections
     @BindView(R.id.coordinatorContainer)
@@ -69,6 +74,9 @@ public class HomeActivity extends AppCompatActivity
     private RecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private BottomSheetBehavior mBottomSheetBehavior;
+
+    // For serialization of data
+    Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +115,9 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void refreshRecyclerView() {
-
+    public void refreshRecyclerView(@NonNull ArrayList<CombinedData> refreshedDataList) {
+        mDataList = refreshedDataList;
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -138,7 +147,11 @@ public class HomeActivity extends AppCompatActivity
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetContainer);
         toggleBottomSheet(false);
         mBtnBottomSheetSave.setOnClickListener(view -> {
+            String newTitle = getBottomSheetInputData();
+            mPresenter.updatePostTitle(newTitle, editTitlePosition, mDataList);
+            // TODO:cu There is a bug. Bottom Sheet not closing after keyboard disappears
             toggleBottomSheet(false);
+            hideSoftKeyboard();
         });
     }
 
@@ -168,6 +181,15 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
+    public void hideSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = this.getCurrentFocus();
+        if (imm != null && view != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mPresenter.setView(this);
@@ -185,6 +207,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void editPostTitle(int position) {
+        editTitlePosition = position;
         setBottomSheetInputField(mDataList.get(position).getPost().getTitle());
         toggleBottomSheet(true);
     }
@@ -203,8 +226,12 @@ public class HomeActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         // Save the recyclerview state
         listState = mLayoutManager.onSaveInstanceState();
+        outState.putInt(EDIT_TITLE_POSITION, editTitlePosition);
         outState.putParcelable(LIST_STATE_KEY, listState);
-        outState.putSerializable(LIST_DATASET, mDataList);
+
+        // Convert ArrayList to serialized data with GSON
+        String serializedData = gson.toJson(mDataList);
+        outState.putString(LIST_DATASET, serializedData);
     }
 
     @Override
@@ -212,8 +239,13 @@ public class HomeActivity extends AppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
         // Restore list state
         if (savedInstanceState != null) {
+            editTitlePosition = savedInstanceState.getInt(EDIT_TITLE_POSITION);
             listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
-            mDataList = (ArrayList<CombinedData>) savedInstanceState.getSerializable(LIST_DATASET);
+
+            // Convert serialized data to ArrayList with GSON
+            String serializedData = savedInstanceState.getString(LIST_DATASET);
+            mDataList = gson.fromJson(serializedData, new TypeToken<ArrayList<CombinedData>>(){}.getType());
+
             if (mDataList != null) {
                 populateAdapter(mDataList);
             } else {
