@@ -94,4 +94,14 @@ public class HomePresenterTests {
 
         assertTrue(!isValidInput);
     }
+
+    @Test
+    public void removingItemFromDataListShouldDecreaseItsSize() throws Exception {
+        int initialDataSetSize = mFakeDataSet.size();
+
+        // Run the logic
+        int itemRemovedDataSetSize = mHomePresenter.removeItemFromDataList(2, mFakeDataSet).size();
+
+        assertTrue(initialDataSetSize > itemRemovedDataSetSize);
+    }
 }
