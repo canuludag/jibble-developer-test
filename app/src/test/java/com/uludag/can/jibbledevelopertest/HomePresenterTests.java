@@ -92,6 +92,7 @@ public class HomePresenterTests {
         // Verify that mView.getBottomSheetInputData() method called only once
         verify(mockView, times(1)).getBottomSheetInputData();
 
+        // Check that the input is not valid in this situation
         assertTrue(!isValidInput);
     }
 
@@ -102,6 +103,7 @@ public class HomePresenterTests {
         // Run the logic
         int itemRemovedDataSetSize = mHomePresenter.removeItemFromDataList(2, mFakeDataSet).size();
 
+        // Check that the initial list size is bigger than the updated list size
         assertTrue(initialDataSetSize > itemRemovedDataSetSize);
     }
 }
