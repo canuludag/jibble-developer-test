@@ -14,6 +14,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -168,10 +169,15 @@ public class HomeActivity extends AppCompatActivity
         toggleEditDataBottomSheet(false);
         mBtnBottomSheetSave.setOnClickListener(view -> {
             String newTitle = getBottomSheetInputData();
-            mPresenter.updatePostTitle(newTitle, editTitlePosition, mDataList);
-            toggleEditDataBottomSheet(false);
-            mBottomSheetContainerEditData.setVisibility(View.GONE);
-            hideSoftKeyboard();
+            if (newTitle.length() > 0) {
+                mPresenter.updatePostTitle(newTitle, editTitlePosition, mDataList);
+                toggleEditDataBottomSheet(false);
+                mBottomSheetContainerEditData.setVisibility(View.GONE);
+                hideSoftKeyboard();
+            } else {
+                displaySnackBar(getString(R.string.snackbar_message_empty_title));
+            }
+
         });
 
         // Display Data Bottom Sheet
@@ -201,6 +207,12 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void displaySnackBar(@NotNull String message) {
+        Snackbar
+                .make(mCoordinatorContainer, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void displayFailSnackBar(@NotNull String message) {
         Snackbar
                 .make(mCoordinatorContainer, message, Snackbar.LENGTH_SHORT)
                 .setAction(R.string.snackbar_action_retry, view -> {
@@ -252,6 +264,25 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onSwiped(@NotNull RecyclerView.ViewHolder viewHolder, int direction, int position) {
         mAdapter.removeItem(position);
+
+        // If the selected position is equal to deleted index hide bottom sheets,
+        // because there is no data to display
+        if (editTitlePosition == position) {
+            toggleEditDataBottomSheet(false);
+            toggleDisplayDataBottomSheet(false);
+            editTitlePosition = -1;
+        } else if (displayDataDetailPosition == position) {
+            toggleEditDataBottomSheet(false);
+            toggleDisplayDataBottomSheet(false);
+            displayDataDetailPosition = -1;
+
+            // Selected index will change, so we have to update it
+            // If the removed index smaller or equal to selected index, than decrease the selected index -1
+        } else if (editTitlePosition > position) {
+            editTitlePosition--;
+        } else if (displayDataDetailPosition > position) {
+            displayDataDetailPosition--;
+        }
     }
 
     @Override
@@ -264,6 +295,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void displayDataDetail(int dataPosition) {
+        Log.d("TAG", dataPosition+"");
         displayDataDetailPosition = dataPosition;
         setDetailBottomSheetFields(dataPosition);
         toggleEditDataBottomSheet(false);
@@ -346,10 +378,22 @@ public class HomeActivity extends AppCompatActivity
             // If so fill the fields
             if (mDisplayDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED
                     || mDisplayDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                setDetailBottomSheetFields(displayDataDetailPosition);
+
+                if (displayDataDetailPosition < mDataList.size()) {
+                    setDetailBottomSheetFields(displayDataDetailPosition);
+                } else {
+                    toggleDisplayDataBottomSheet(false);
+                }
+
             } else if (mEditDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED
                     || mEditDataBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                setEditDataBottomSheetFields(editTitlePosition);
+
+                if (editTitlePosition < mDataList.size()) {
+                    setEditDataBottomSheetFields(editTitlePosition);
+                } else {
+                    toggleEditDataBottomSheet(false);
+                }
+
             }
 
             hideSoftKeyboard();

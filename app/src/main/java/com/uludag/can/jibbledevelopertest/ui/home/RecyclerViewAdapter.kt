@@ -11,7 +11,7 @@ import com.uludag.can.jibbledevelopertest.listeners.EditPostTitleListener
 import com.uludag.can.jibbledevelopertest.models.CombinedData
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class RecyclerViewAdapter(private var dataList: MutableList<CombinedData>,
+class RecyclerViewAdapter(private var dataList: ArrayList<CombinedData>,
                           private val editPostTitleListener: EditPostTitleListener,
                           private val displayDataDetailListener: DisplayDataDetailListener)
     : RecyclerView.Adapter<RecyclerViewAdapter.CustomViewHolder>() {
@@ -51,6 +51,7 @@ class RecyclerViewAdapter(private var dataList: MutableList<CombinedData>,
         if (!dataList.isEmpty()) {
             dataList.removeAt(position)
             notifyItemRemoved(position)
+            notifyDataSetChanged()
         }
     }
 

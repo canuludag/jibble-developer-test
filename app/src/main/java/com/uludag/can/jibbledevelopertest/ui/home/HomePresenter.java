@@ -76,7 +76,7 @@ public class HomePresenter implements HomeActivityContract.Presenter {
             mView.hideProgressbar();
         }).onErrorReturn(error -> {
             mView.hideProgressbar();
-            mView.displaySnackBar(mContext.getString(R.string.snackbar_error_fetching_data));
+            mView.displayFailSnackBar(mContext.getString(R.string.snackbar_error_fetching_data));
             error.printStackTrace();
             return new ArrayList<>();
         }).subscribe();

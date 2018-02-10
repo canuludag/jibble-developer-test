@@ -28,6 +28,8 @@ interface HomeActivityContract {
 
         fun displaySnackBar(message: String)
 
+        fun displayFailSnackBar(message: String)
+
         fun setEditDataBottomSheetFields(dataPosition: Int)
 
         fun getBottomSheetInputData(): String
