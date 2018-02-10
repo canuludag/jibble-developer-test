@@ -17,6 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class Repository  implements HomeActivityContract.Model{
 
+    private static final int FETCH_DATA_LIMIT = 30; // Request only 30 items from each endpoint
     private ApiService mApiService;
 
     @Inject
@@ -27,7 +28,7 @@ public class Repository  implements HomeActivityContract.Model{
     @NotNull
     @Override
     public Observable<List<Post>> getPosts() {
-        return mApiService.getPosts()
+        return mApiService.getPosts(FETCH_DATA_LIMIT)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -35,7 +36,7 @@ public class Repository  implements HomeActivityContract.Model{
     @NotNull
     @Override
     public Observable<List<Album>> getAlbums() {
-        return mApiService.getAlbums()
+        return mApiService.getAlbums(FETCH_DATA_LIMIT)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -43,7 +44,7 @@ public class Repository  implements HomeActivityContract.Model{
     @NotNull
     @Override
     public Observable<List<User>> getUsers() {
-        return mApiService.getUsers()
+        return mApiService.getUsers(FETCH_DATA_LIMIT)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }

@@ -26,7 +26,7 @@ public class HomePresenter implements HomeActivityContract.Presenter {
     private HomeActivityContract.Model mModel;
 
     @Inject
-    public HomePresenter(HomeActivityContract.Model model, Context context) {
+    HomePresenter(HomeActivityContract.Model model, Context context) {
         mModel = model;
         mContext = context;
     }

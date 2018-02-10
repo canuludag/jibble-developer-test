@@ -299,6 +299,11 @@ public class HomeActivity extends AppCompatActivity
         } else if (displayDataDetailPosition > position) {
             displayDataDetailPosition--;
         }
+
+        // If there are no data, display empty state
+        if (mDataList.size() == 0) {
+            toggleEmptyStates(true);
+        }
     }
 
     @Override
